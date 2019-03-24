@@ -22,7 +22,7 @@ const defaultState = [
 
 class Application extends Component {
   state = {
-    // Set the initial state,
+   items : [...defaultState]
   };
 
   // How are we going to manipulate the state?
@@ -36,11 +36,19 @@ class Application extends Component {
       <div className="Application">
         <NewItem />
         <CountDown />
-        <Items title="Unpacked Items" items={[]} />
-        <Items title="Packed Items" items={[]} />
-        <button className="button full-width">Mark All As Unpacked</button>
+        <Items title="Unpacked Items" items={this.state.items.filter( item => !item.packed)} />
+        <Items title="Packed Items" items={this.state.items.filter( item => item.packed)} />
+        <button onClick={this.markAllUnpacked.bind(this)} className="button full-width">Mark All As Unpacked</button>
       </div>
     );
+  }
+
+   markAllUnpacked() {
+      this.setState((state)=>{
+          return {
+              items:state.items.map(item => ({...item, packed:false}))
+          };
+      })
   }
 }
 
