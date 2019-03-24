@@ -35,7 +35,7 @@ class Application extends Component {
     return (
       <div className="Application">
         <NewItem onSubmit = {this.itemsListUpdate} />
-        <CountDown />
+        {/*<CountDown /> removing the annoying countdown */}
         <Items itemsListUpdate = {this.itemsListUpdate} title="Unpacked Items" items={this.state.items.filter( item => !item.packed)} />
         <Items itemsListUpdate = {this.itemsListUpdate} title="Packed Items" items={this.state.items.filter( item => item.packed)} />
         <button onClick={this.markAllUnpacked} className="button full-width">Mark All As Unpacked</button>
