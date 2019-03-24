@@ -8,9 +8,16 @@ class Items extends Component {
   };
 
   updateSearchTerm = searchTerm => {};
+  itemCheckOff = id => {
+      this.props.itemsListUpdate({type:'TOGGLE', itemID:id});
+    };
+
+  itemDelete = id => {
+      this.props.itemsListUpdate({type:'REMOVE', itemID:id});
+  };
 
   render() {
-    const { title, items } = this.props;
+    const { title, items  } = this.props;
     return (
       <section className="Items">
         <h2>
@@ -19,20 +26,21 @@ class Items extends Component {
         <Filter searchTerm={''} onChange={this.updateSearchTerm} />
         {items
           .filter(item =>
-            // Hmm… this needs some work.
             item.value.toLowerCase().includes(''.toLowerCase()),
           )
           .map(item => (
             <Item
               key={item.id}
-              onCheckOff={() => {}}
-              onRemove={() => {}}
+              onCheckOff={this.itemCheckOff}
+              onRemove={this.itemDelete}
               item={item}
             />
           ))}
       </section>
     );
   }
+
+
 }
 
 export default Items;

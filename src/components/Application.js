@@ -22,7 +22,7 @@ const defaultState = [
 
 class Application extends Component {
   state = {
-    // Set the initial state,
+   items : [...defaultState]
   };
 
   // How are we going to manipulate the state?
@@ -34,14 +34,65 @@ class Application extends Component {
 
     return (
       <div className="Application">
-        <NewItem />
-        <CountDown />
-        <Items title="Unpacked Items" items={[]} />
-        <Items title="Packed Items" items={[]} />
-        <button className="button full-width">Mark All As Unpacked</button>
+        <NewItem onSubmit = {this.itemsListUpdate} />
+        {/*<CountDown /> removing the annoying countdown */}
+        <Items itemsListUpdate = {this.itemsListUpdate} title="Unpacked Items" items={this.state.items.filter( item => !item.packed)} />
+        <Items itemsListUpdate = {this.itemsListUpdate} title="Packed Items" items={this.state.items.filter( item => item.packed)} />
+        <button onClick={this.markAllUnpacked} className="button full-width">Mark All As Unpacked</button>
       </div>
     );
   }
+
+   markAllUnpacked = () => {
+      this.setState((state)=>{
+          return {
+              items:state.items.map(item => ({...item, packed:false}))
+          };
+      })
+  };
+
+    /**
+     * Managing the Total Application State in the APP where I am maintaining the whole state . So We pass handler created in the App into Items Component
+     * where another action listener is propagated into the Child Item Component which catches the event
+     * @param itemUpdate : {type: string, itemID: string, itemName: string} has Payload and action type on the List
+     *
+     */
+    itemsListUpdate = (itemUpdate = {type:'_NOACTION_',itemID :'', itemName :''}) => {
+    switch(itemUpdate.type){
+        case 'TOGGLE': {
+            this.setState((state) => {
+                return {
+                    items: state.items.map(item => {
+                        if (item.id === itemUpdate.itemID)
+                            return {...item, packed: !item.packed};
+                        else
+                            return item;
+                    })
+                }
+            });
+            break;
+        }
+        case 'ADD': {
+            this.setState((state)=>{
+                return{
+                    items:[...state.items,{value:itemUpdate.itemName, id:uniqueId() , packed:false}]
+                }
+            });
+            break;
+        }
+        case 'REMOVE': {
+            this.setState((state)=>{
+                return {
+                    items: state.items.filter(item => item.id !== itemUpdate.itemID)
+                }
+            });
+            break;
+        }
+        default:
+    }
+
+    };
+
 }
 
 export default Application;
